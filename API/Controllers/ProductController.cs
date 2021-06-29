@@ -1,34 +1,33 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Core.Entities;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Infrastructure.Data;
+using Core.Interfaces;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TestProductController : ControllerBase
+    public class ProductController : ControllerBase
     {
-        private readonly StoreContext _context;
+        private readonly IProductRepository _productRepo;
 
-        public TestProductController(StoreContext context)
+        public ProductController(IProductRepository productRepo)
         {
-            _context = context;
+            _productRepo = productRepo;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProducts()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _productRepo.GetProductsAsync();
             return Ok(products);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Product>>> GetProduct(int id)
         {
-            var product  = await _context.Products.FindAsync(id);
+            var product = await _productRepo.GetProductByIdAsync(id);
             return Ok(product);
         }
 
