@@ -20,13 +20,7 @@ namespace Infrastructure.Data
                 if (!context.ProductBrands.Any())
                 {
                     var brands = ReadJsonAndMapToModel<ProductBrand>(basePath + "/brands.json");
-
-                    foreach (var brand in brands)
-                    {
-                        context.ProductBrands.Add(brand);
-                    }
-
-                    await context.SaveChangesAsync();
+                    await AddEntityToDb<ProductBrand>(context, brands);
                 }
                 #endregion
 
@@ -34,13 +28,7 @@ namespace Infrastructure.Data
                 if (!context.ProductTypes.Any())
                 {
                     var types = ReadJsonAndMapToModel<ProductType>(basePath + "/types.json");
-
-                    foreach (var type in types)
-                    {
-                        context.ProductTypes.Add(type);
-                    }
-
-                    await context.SaveChangesAsync();
+                    await AddEntityToDb<ProductType>(context, types);
                 }
                 #endregion
 
@@ -48,13 +36,7 @@ namespace Infrastructure.Data
                 if (!context.Products.Any())
                 {
                     var products = ReadJsonAndMapToModel<Product>(basePath + "/products.json");
-
-                    foreach (var product in products)
-                    {
-                        context.Products.Add(product);
-                    }
-
-                    await context.SaveChangesAsync();
+                    await AddEntityToDb<Product>(context, products);
                 }
                 #endregion
             }
@@ -65,11 +47,17 @@ namespace Infrastructure.Data
             }
         }
 
-        public static List<T> ReadJsonAndMapToModel<T>(string filePath) where T : class
+        private static List<T> ReadJsonAndMapToModel<T>(string filePath) where T : class
         {
             var text = File.ReadAllText(filePath);
             var mappedJsonToModel = JsonSerializer.Deserialize<List<T>>(text);
             return mappedJsonToModel;
+        }
+
+        private static async Task AddEntityToDb<T>(StoreContext context, List<T> mappedJsonToModel) where T : BaseEntity
+        {
+            mappedJsonToModel.ForEach(x => context.Set<T>().Add(x));
+            await context.SaveChangesAsync();
         }
     }
 }
