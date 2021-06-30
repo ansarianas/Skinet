@@ -15,12 +15,11 @@ namespace Infrastructure.Data
         {
             try
             {
-                var basePath = "../Infrastructure/Data/SeedData/";
+                var basePath = "../Infrastructure/Data/SeedData";
                 #region Seed data into productbrands table
                 if (!context.ProductBrands.Any())
                 {
-                    var brandsData = File.ReadAllText(basePath + "brands.json");
-                    var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsData);
+                    var brands = ReadJsonAndMapToModel<ProductBrand>(basePath + "/brands.json");
 
                     foreach (var brand in brands)
                     {
@@ -34,8 +33,7 @@ namespace Infrastructure.Data
                 #region Seed data into producttypes table
                 if (!context.ProductTypes.Any())
                 {
-                    var typesData = File.ReadAllText(basePath + "types.json");
-                    var types = JsonSerializer.Deserialize<List<ProductType>>(typesData);
+                    var types = ReadJsonAndMapToModel<ProductType>(basePath + "/types.json");
 
                     foreach (var type in types)
                     {
@@ -49,8 +47,7 @@ namespace Infrastructure.Data
                 #region Seed data into products table
                 if (!context.Products.Any())
                 {
-                    var productsData = File.ReadAllText(basePath + "products.json");
-                    var products = JsonSerializer.Deserialize<List<Product>>(productsData);
+                    var products = ReadJsonAndMapToModel<Product>(basePath + "/products.json");
 
                     foreach (var product in products)
                     {
@@ -66,6 +63,13 @@ namespace Infrastructure.Data
                 var logger = loggerFactory.CreateLogger<StoreContextSeed>();
                 logger.LogError(ex, "An error occured while seeding data to tables");
             }
+        }
+
+        public static List<T> ReadJsonAndMapToModel<T>(string filePath) where T : class
+        {
+            var text = File.ReadAllText(filePath);
+            var mappedJsonToModel = JsonSerializer.Deserialize<List<T>>(text);
+            return mappedJsonToModel;
         }
     }
 }
