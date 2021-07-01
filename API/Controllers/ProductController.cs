@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 
 namespace API.Controllers
 {
@@ -24,7 +25,8 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProducts()
         {
-            var products = await _productRepo.GetListAsync();
+            var spec = new ProductsWithTypesAndBrandsSpec();
+            var products = await _productRepo.GetListAsyncWitSpec(spec);
             return Ok(products);
         }
 
