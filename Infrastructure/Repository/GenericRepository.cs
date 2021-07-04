@@ -20,27 +20,32 @@ namespace Infrastructure.Repository
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            var entity = await _context.Set<T>().FindAsync(id);
+            return entity;
         }
 
         public async Task<List<T>> GetListAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            var entities = await _context.Set<T>().ToListAsync();
+            return entities;
         }
 
-        public async Task<IReadOnlyList<T>> GetListAsyncWitSpec(ISpecification<T> spec)
+        public async Task<IReadOnlyList<T>> GetListAsyncWithSpec(ISpecification<T> spec)
         {
-            return await ApplySpecification(spec).ToListAsync();
+            var entitiesWithSpec = await ApplySpecification(spec).ToListAsync();
+            return entitiesWithSpec;
         }
 
-        public async Task<T> GetEntityWitSpec(ISpecification<T> spec)
+        public async Task<T> GetEntityWithSpec(ISpecification<T> spec)
         {
-            return await ApplySpecification(spec).FirstOrDefaultAsync();
+            var entityWithSpec = await ApplySpecification(spec).FirstOrDefaultAsync();
+            return entityWithSpec;
         }
 
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
-            return SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), spec);
+            var filteredQuery = SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), spec);
+            return filteredQuery;
         }
     }
 }

@@ -7,3 +7,4 @@ appsettings.json
 *.sql
 architecture-1.png
 skinet.txt
+.DS_Store
