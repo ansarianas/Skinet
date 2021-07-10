@@ -30,13 +30,13 @@ namespace Infrastructure.Repository
             return entities;
         }
 
-        public async Task<IReadOnlyList<T>> GetListAsyncWithSpec(ISpecification<T> spec)
+        public async Task<IReadOnlyList<T>> GetListWithSpecAsync(ISpecification<T> spec)
         {
             var entitiesWithSpec = await ApplySpecification(spec).ToListAsync();
             return entitiesWithSpec;
         }
 
-        public async Task<T> GetEntityWithSpec(ISpecification<T> spec)
+        public async Task<T> GetEntityWithSpecAsync(ISpecification<T> spec)
         {
             var entityWithSpec = await ApplySpecification(spec).FirstOrDefaultAsync();
             return entityWithSpec;
