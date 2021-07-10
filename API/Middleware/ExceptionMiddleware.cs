@@ -34,8 +34,7 @@ namespace API.Middleware
             {
                 var statusCode = (int)HttpStatusCode.InternalServerError;
                 var stackTrace = (ex.StackTrace.Replace(":line", String.Empty).Split('\n')[0]).Trim().Split(' ');
-                var fullPath = stackTrace[3];
-                var fileName = fullPath.Substring(fullPath.LastIndexOf('\\')).Replace("\\", String.Empty);
+                
                 _logger.LogError(ex, ex.Message);
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = statusCode;
@@ -44,8 +43,8 @@ namespace API.Middleware
                     statusCode,
                     int.Parse(stackTrace[stackTrace.Length - 1]),
                     ex.Message,
-                    fileName,
-                    fullPath,
+                    stackTrace[3].Substring(stackTrace[3].LastIndexOf('\\')).Replace("\\", String.Empty),
+                    stackTrace[3],
                     stackTrace[1]
                 )
                 : new ResponseBuilderException(statusCode);
