@@ -30,7 +30,7 @@ namespace API.Controllers
         public async Task<ActionResult<List<ProductDTO>>> GetProducts()
         {
             var spec = new ProductsWithTypesAndBrandsSpec();
-            var products = await _productRepo.GetListAsyncWithSpec(spec);
+            var products = await _productRepo.GetListWithSpecAsync(spec);
             return _mapper.Map<IReadOnlyList<Product>, List<ProductDTO>>(products);
         }
 
@@ -38,7 +38,7 @@ namespace API.Controllers
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpec(id);
-            var product = await _productRepo.GetEntityWithSpec(spec);
+            var product = await _productRepo.GetEntityWithSpecAsync(spec);
             return _mapper.Map<Product, ProductDTO>(product);
         }
 
